@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Calculator</title>
+    <style>
+        body{
+                background-image: url(rain.jpg);
+                background-attachment: fixed;
+                background-size: 100% 100%;
+                background-repeat: no-repeat;
+            }
+        .calculator {
+            width: 200px;
+            margin: 50px auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .display {
+            grid-column: span 4;
+            background: #33a1ad;
+            color: white;
+            padding: 10px;
+            text-align: right;
+        }
+
+        .button {
+            background: #7c4546;
+            border: 1px solid #ccc;
+            padding: 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #e9e9e9;
+        }
+
+        .equals {
+            grid-column: span 2;
+        }
+    </style>
+</head>
+<body >
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <button class="button" id="clear">C</button>
+        <button class="button" id="divide">/</button>
+        <button class="button" id="multiply">*</button>
+        <button class="button" data-number="7">7</button>
+        <button class="button" data-number="8">8</button>
+        <button class="button" data-number="9">9</button>
+        <button class="button" id="subtract">-</button>
+        <button class="button" data-number="4">4</button>
+        <button class="button" data-number="5">5</button>
+        <button class="button" data-number="6">6</button>
+        <button class="button" id="add">+</button>
+        <button class="button" data-number="1">1</button>
+        <button class="button" data-number="2">2</button>
+        <button class="button" data-number="3">3</button>
+        <button class="button equals" id="equals">=</button>
+        <button class="button" data-number="0">0</button>
+        <button class="button" id="decimal">.</button>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let display = document.getElementById('display');
+            let numbers = document.querySelectorAll('[data-number]');
+            let operations = document.querySelectorAll('[id$="ply"], [id$="ide"], [id$="add"], [id$="subtract"]');
+            let currentOperation = null;
+            let firstOperand = null;
+            let secondOperand = null;
+
+            numbers.forEach(button => {
+                button.addEventListener('click', function() {
+                    if(display.textContent === '0') display.textContent = '';
+                    display.textContent += button.getAttribute('data-number');
+                });
+            });
+
+            document.getElementById('clear').addEventListener('click', function() {
+                display.textContent = '0';
+                firstOperand = null;
+                secondOperand = null;
+                currentOperation = null;
+            });
+
+            operations.forEach(button => {
+                button.addEventListener('click', function() {
+                    firstOperand = parseFloat(display.textContent);
+                    currentOperation = button.id;
+                    display.textContent = '';
+                });
+            });
+
+            document.getElementById('equals').addEventListener('click', function() {
+                if(currentOperation && firstOperand !== null) {
+                    secondOperand = parseFloat(display.textContent);
+                    let result;
+                    switch (currentOperation) {
+                        case 'add':
+                            result = firstOperand + secondOperand;
+                            break;
+                        case 'subtract':
+                            result = firstOperand - secondOperand;
+                            break;
+                        case 'multiply':
+                            result = firstOperand * secondOperand;
+                            break;
+                        case 'divide':
+                            result = firstOperand / secondOperand;
+                            break;
+                        default:
+                            result = 'ERROR';
+                            break;
+                    }
+                    display.textContent = result;
+                    currentOperation = null;
+                }
+            });
+            
+            document.getElementById('decimal').addEventListener('click', function() {
+                if(!display.textContent.includes('.')) {
+                    display.textContent += '.';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
